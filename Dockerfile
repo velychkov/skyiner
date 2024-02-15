@@ -1,5 +1,4 @@
-FROM python:3.10-alpine
-RUN apk add curl
+FROM python:3.9.18
 RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=/opt/poetry python && \
     cd /usr/local/bin && \
     ln -s /opt/poetry/bin/poetry && \

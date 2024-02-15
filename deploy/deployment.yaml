@@ -5,7 +5,7 @@ metadata:
     app: devops-test
   name: devops-test
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: devops-test
@@ -15,6 +15,17 @@ spec:
       labels:
         app: devops-test
     spec:
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: "kubernetes.io/os=linux"
+        whenUnsatisfiable: ScheduleAnyway
+        labelSelector:
+          matchLabels:
+            app: devops-test
+      initContainers:
+      - name: db-checker
+        image: mysql
+        command: ['sh', '-c', 'until mysqladmin ping -h"my-release-mysql" --silent; do echo "Waiting for data base ready"; sleep 2; done;']
       containers:
       - image: devops-test
         imagePullPolicy: IfNotPresent
@@ -24,9 +35,12 @@ spec:
             valueFrom:
               secretKeyRef:
                 key: mysql-root-password
-                name: mysql
+                name: my-release-mysql
           - name: NODE_NAME
-            value: "minikube-test"
+            valueFrom:
+              configMapKeyRef:
+                name: node-name-config  
+                key: NODE_NAME  
         ports:
           - containerPort: 8000
             name: http

@@ -3,8 +3,9 @@ kind: Kustomization
 resources:
   - deployment.yaml
   - service.yaml
+  - configmap.yaml
 images:
-  - newName: devops-test
-    newTag: v1
+  - newName: skyiner/app
+    newTag: "0.4"
     name: devops-test
 namespace: default

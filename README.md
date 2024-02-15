@@ -40,4 +40,34 @@ Suggest how we can implement next items. Add your suggestions into this README f
 
 ### Suggestions
 
-put you suggestions here
+Managing Secrets in External Tool and Syncing into Kubernetes
+1. Choose an External Secrets Management Tool:
+
+- HashiCorp Vault: A widely used tool for secrets management that supports dynamic secrets, encryption as a service, and tight access control mechanisms.
+- AWS Secrets Manager : Cloud provider solutions that offer secrets management as a service, with built-in integration for other cloud services.
+
+2. Integrate the External Secrets Tool with Kubernetes:
+
+- Use the Kubernetes External Secrets Operator: This operator allows you to automatically sync secrets from external secrets management tools into Kubernetes. It watches for changes in your external secrets storage and reflects those changes in your Kubernetes secrets.
+- Inject Secrets into Pods: Use Vault's sidecar injector  to fetch secrets from Vault and inject them into your containers at runtime.
+
+- The Vault Agent Sidecar pattern is a method used to securely introduce secrets into Kubernetes pods from HashiCorp Vault. It leverages the Vault Agent, which is a client daemon that automates the process of authentication with Vault and the management of secrets. When used as a sidecar container within a Kubernetes pod, the Vault Agent can continuously authenticate with Vault, retrieve secrets, and manage their lifecycle. 
+The Vault Agent writes the retrieved secrets to a shared volume within the pod, usually a memory-based filesystem like tmpfs to reduce the risk of secret exposure. Applications within the pod can read secrets from this shared volume.
+
+3. Configure Access and Policies:
+
+Ensure that the tool you choose is properly configured to securely manage access to secrets. This involves setting up roles, policies, and identity brokering mechanisms.
+Securely configure the communication between your Kubernetes cluster and the external secrets management tool, using mutual TLS or another secure method.
+
+Monitoring:
+
+Prometheus and Grafana: 
+Prometheus for metrics collection and Grafana for visualization is a popular combination. Prometheus can scrape metrics from each Kubernetes node and service, while Grafana allows you to create dashboards for easy visualization of those metrics.
+Why Prometheus and Grafana?
+ Prometheus's design is a good fit for Kubernetes. It is cloud-native and designed for dynamic environments. Grafana's versatility in creating insightful, comprehensive dashboards enhances the value of the collected metrics.
+
+Logging:
+
+Elasticsearch, Fluentd, and Kibana (EFK Stack) or Fluentbit and CloudWatch: These stacks are widely used for logging. Fluentd can collect and parse logs, Elasticsearch as the search and analytics engine, and Kibana for visualization. The same is true for Fluentbit, a new generation of agents for collecting and parsing logs. CloudWatch for storing analyze logs and CloudWatch dashboard for visualization. 
+
+I have experience with setting up a Grafana and Prometheus, and fluent bit together with Cloudwatch. But choosing tolls should depend on the projects needs( money, high load ) and of course on the current realisation of this tools ( if exist) 
